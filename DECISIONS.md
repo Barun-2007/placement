@@ -1,0 +1,2 @@
+The dataset which i chose has problems like cg>=6.5,10th marks>=55 and 12th marks>=55.
+Firstly i thought dataset is wrong but then i got to know the fact that the company to which they have applied must have these criteria then i updated my application in that format.
