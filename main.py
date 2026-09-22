@@ -70,8 +70,8 @@ if prediction:
         value=row["SHAP"]
 
         if value>0:
-            st.write(f"🟢 {feature}: +{value*100:.4f}% increased the placement probability")
+            st.write(f"🟢 {feature}: This is ok")
         elif value<0:
-            st.write(f"🔴 {feature}: {value*100:.4f}% decreased the placement probability")
+            st.write(f"🔴 {feature}: You have to work on")
         else:
-            st.write(f"⚪ {feature}: 0.0000 had no effect")
+            st.write(f"⚪ {feature}: had no effect")
