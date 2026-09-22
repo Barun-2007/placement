@@ -43,10 +43,8 @@ if prediction:
     st.subheader("Placement Probability")
     st.metric("Chance of Placement",f"{placement_probability:.2f}%")
     st.progress(min(int(placement_probability),100))
-
     preprocessor=model[:-1]
     classifier=model[-1]
-
     X_transformed=preprocessor.transform(input_data)
     X_background=preprocessor.transform(X_train)
     feature_names=preprocessor.get_feature_names_out()
@@ -59,19 +57,29 @@ if prediction:
         "SHAP":shap_values
     })
 
-    explanation["Feature"]=explanation["Feature"].str.replace("num__","",regex=False).str.replace("cat__","",regex=False)
+    explanation["Feature"]=(
+        explanation["Feature"]
+        .str.replace("num__","",regex=False)
+        .str.replace("cat__","",regex=False)
+    )
+
     explanation["Abs_SHAP"]=explanation["SHAP"].abs()
-    explanation=explanation.sort_values("Abs_SHAP",ascending=False)
 
+    explanation=explanation[
+        explanation["Abs_SHAP"] > 1e-6
+    ]
+
+    explanation=explanation.sort_values(
+        "Abs_SHAP",
+        ascending=False
+    )
     st.subheader("Reasons Behind Prediction")
-
-    for _,row in explanation.head(5).iterrows():
+    for _,row in explanation.iterrows():
         feature=row["Feature"]
         value=row["SHAP"]
-
-        if value>0:
+        if feature.startswith("Extracurricular_") or feature.startswith("Training_"):
+            continue
+        if value > 0:
             st.write(f"🟢 {feature}: This is ok")
-        elif value<0:
-            st.write(f"🔴 {feature}: You have to work on")
         else:
-            st.write(f"⚪ {feature}: had no effect")
+            st.write(f"🔴 {feature}: You have to work on")
